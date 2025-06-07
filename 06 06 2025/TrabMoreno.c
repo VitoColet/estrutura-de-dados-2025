@@ -101,24 +101,32 @@ void remover(no ** head, int value)
 	no * temp = (*head);
 	no * temp_antecessor = temp;
 	int i=0;
-	while (temp || temp_prox)
+	while (temp)
 	{
 		i++;
 		
 		if (i > 2)
-			temp_antecessor = temp_antecessor->prox
+			temp_antecessor = temp_antecessor->prox;
 		
-		
-		if (temp_prox == NULL && temp->val == value)
-		{
-			free(temp);
-			(*head) = NULL;
-			printf("Valor apagado.\n");
-			return;
+		if (temp->val == value && i==1)
+	    {
+	      no * aux = temp;
+	      temp = temp->prox;
+	      free(aux);
+	      (*head) = temp;
+	      
+	      return;
+	    }
+	    else if (temp->val == value && i > 1)
+	    {
+	    	temp_antecessor->prox = temp->prox;
+	    	free(temp);
+	    	return;
 		}
-		else if ()
-	}
 	
+		temp = temp->prox;
+  }
+  
 }
 
 void imprimir(no *no){
