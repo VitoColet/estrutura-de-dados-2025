@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct pessoa
 {
@@ -43,7 +44,7 @@ void print(node * head)
 	
 	while(head != NULL)
 	{
-		printf("%s | %d ->", head->Pessoa.nome, head->Pessoa.idade);
+		printf("%s | %d -> ", head->Pessoa.nome, head->Pessoa.idade);
 		head = head->next;
 	}
 	printf("NULL\n");
@@ -73,6 +74,19 @@ void limpa_buffer()
 	while ( (c = getchar()) != '\n');
 }
 
+void limpar(node *head)
+{
+	
+	while (head != NULL)
+	{
+		node * temp = head->next;
+		free(head->Pessoa.nome);
+		free(head);
+		head = temp;
+	}
+	
+}
+
 int main(void)
 {
 	
@@ -82,36 +96,56 @@ int main(void)
 	do{
 		printf("1 - Cadastrar pessoa.\n");
 		printf("2 - Listar pessoas.\n");
-		printf("3 - Sair.\n");
+		printf("3 - Apagar pessoa.\n");
+		printf("4 - Sair.\n");
 		printf("Sua opcao:");
 		scanf("%d", &opcao);
 		limpa_buffer();
 		
 		switch(opcao)
 		{
-			pessoa pessoaTemp;
-			char buffer[256];
+			
 			case 1:
+				{
+				pessoa pessoaTemp;
+				char buffer[256];
+
 				system("cls");
 				printf("Nome:");
 				fgets(buffer, 256, stdin);
 				
-				for (int i=0; buffer[0] != '\n'; i++)
+				for (int i=0; buffer[i] != '\0'; i++)
+					if (buffer[i] == '\n')
+						buffer[i] = '\0';
 				
-				pessoaTemp.nome = buffer;
+				pessoaTemp.nome = malloc(strlen(buffer) + 1);
+				
+				if (!pessoaTemp.nome)
+				{
+					exit(EXIT_FAILURE);
+				}
+				
+				strcpy(pessoaTemp.nome, buffer);
 				printf("Idade:");
 				scanf("%d", &pessoaTemp.idade);
 				push(&head, pessoaTemp);
 				system("cls");
 				break;
+				}
 			case 2:
 				system("cls");
 				print(head);
 				system("pause");
 				system("cls");
 				break;
+			case 3:
+				pop(&head);
+				system("cls");
+				break;
 		}
 			
-	}while(opcao != 3);
+	}while(opcao != 4);
 	
+	
+	limpar(head);
 }
